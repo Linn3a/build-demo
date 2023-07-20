@@ -170,7 +170,7 @@ for(let i = 0; i < size ; i++){
     }
 }
 
-// referenceBlock = bot.blockAt(referenceBlock.position.offset(0,1,0))
+referenceBlock = bot.blockAt(referenceBlock.position.offset(0,1,0))
 origin_reference = referenceBlock
 console.log('start build roof:', origin_reference);
 
