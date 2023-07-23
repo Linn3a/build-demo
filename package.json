@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "mineflayer": "^4.10.1"
+    "minecraft-data": "^3.40.0",
+    "mineflayer": "^4.10.1",
+    "mineflayer-pathfinder": "^2.4.4"
   }
 }
