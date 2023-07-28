@@ -55,6 +55,7 @@ function blockToBuild () {
       useExtraInfo: checkSpace
   })}
 
+
 async function place(referenceBlock, faceVector, destBlock) {
     try{await bot.placeBlock(referenceBlock, faceVector)}
         catch(err){
@@ -68,8 +69,8 @@ async function place(referenceBlock, faceVector, destBlock) {
                 await equip(destBlock, 'hand')
                 // console.log('newBlock: ',bot.blockAt(referenceBlock.position.plus(faceVector)));
                 await bot.placeBlock(referenceBlock, faceVector)}
-                catch{}}
-                
+                catch{}
+            }                
 }
 }
 
@@ -161,138 +162,7 @@ else
     await place(bot.blockAt(startBlock.position.offset((size-1)/2,1,0)),new Vec3(1,0,0),door)
 }
 
-
-
-
-
-// for(let i = 0; i < size + 2; i++){
-    
-//      origin_reference = referenceBlock
-// for(let k = 0; k < size; k++)
-// {
-//     // referenceBlock = bot.blockAt(referenceBlock.position.offset(0,k,0))
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(0,k,0))
-
-//     faceVector = new Vec3(0,1,0)
-//     await equip(wood, 'hand')
-//     await place(referenceBlock,faceVector,wood)
-//     console.log('k: ',k);
-// }
-// await equip(roof, 'hand')
-// await place(bot.blockAt(referenceBlock.position.offset(0,1,0)),faceVector,roof)
-// await equip(roof, 'hand')
-// await place(bot.blockAt(referenceBlock.position.offset(0,1,-1)),faceVector,roof)
-// referenceBlock = origin_reference
-// if (i!= size + 1)
-// {
-// await equip(wood, 'hand')
-// // console.log('origin_reference: ',origin_reference);
-// await place(origin_reference, new Vec3(1,0,0),wood)
-// referenceBlock = bot.blockAt(origin_reference.position.offset(1,0,0))
-// }
-// }
-
-
-// origin_reference = referenceBlock
-
-// for(let i = 0; i < size + 1; i++){    
-//     await equip(wood, 'hand')
-//     referenceBlock = origin_reference
-//     await place(referenceBlock, new Vec3(0,0,1),wood)
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(0,0,1))
-//     origin_reference = referenceBlock
-//     for(let k = 0; k < size; k++)
-//     {
-//     // referenceBlock = bot.blockAt(referenceBlock.position.offset(0,k,0))
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(0,k,0))
-//     faceVector = new Vec3(0,1,0)
-//     await equip(wood, 'hand')
-//     await place(referenceBlock,faceVector,wood)
-//     // console.log('k: ',k);
-//     }
-//     await equip(roof, 'hand')
-//     await place(bot.blockAt(referenceBlock.position.offset(0,1,0)),faceVector,roof)
-// }
-
-// for(let i = 0; i < size + 1; i++){    
-//     await equip(wood, 'hand')
-//     referenceBlock = origin_reference
-//     await place(referenceBlock, new Vec3(-1,0,0),wood)
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(-1,0,0))
-//     origin_reference = referenceBlock
-//     for(let k = 0; k < size; k++)
-//     {
-//     // referenceBlock = bot.blockAt(referenceBlock.position.offset(0,k,0))
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(0,k,0))
-//     faceVector = new Vec3(0,1,0)
-//     await equip(wood, 'hand')
-//     await place(referenceBlock,faceVector,wood)
-//     console.log('k: ',k);
-//     }
-//         await equip(roof, 'hand')
-//     await place(bot.blockAt(referenceBlock.position.offset(0,1,0)),faceVector,roof)
-// }
-// for(let i = 0; i < size ; i++){    
-//     await equip(wood, 'hand')
-//     referenceBlock = origin_reference
-//     await place(referenceBlock, new Vec3(0,0,-1),wood)
-//     referenceBlock = bot.blockAt(origin_reference.position.offset(0,0,-1))
-//     origin_reference = referenceBlock
-//     for(let k = 0; k < size; k++)
-//     {
-//     referenceBlock = bot.blockAt(referenceBlock.position.offset(0,k,0))
-//     faceVector = new Vec3(0,1,0)
-//     await equip(wood, 'hand')
-//     await place(referenceBlock,faceVector,wood)
-//     // console.log('k: ',k);
-//     }
-//     await equip(roof, 'hand')
-//     await place(bot.blockAt(referenceBlock.position.offset(0,1,0)),faceVector,roof)
-// }
-
-// referenceBlock = bot.blockAt(referenceBlock.position.offset(0,1,0))
-// origin_reference = referenceBlock
-// // console.log('start build roof:', origin_reference);
-
-// // for(let i = 1; i <= size;i++)
-// // {
-// //     for(let j=0;j<size;j++)
-// //     {
-// //         await equip(wood, 'hand')
-// //         referenceBlock = bot.blockAt(origin_reference.position.offset(i,0,j))
-// //         await place(referenceBlock, new Vec3(0,0,1),wood)
-// //     }
-    
-// // }
-
-
-
-
-// // build a roof
-// bot.chat('build roof')
-// referenceBlock = bot.blockAt(startBlock.position.offset(0,size+1,0))
-// // for(let i = 0;i<)
-
-
 }
-    // referenceBlock = bot.blockAt(startBlock.position.offset(0,1,0))
-// }
-// async function BuildARoof(stone_name, startBlock){
-//     for(let i = 0; i < size + 2; i++)
-//     {
-//         const defaultMove = new Movements(bot)
-//         bot.pathfinder.setMovements(defaultMove)
-//         pos = startBlock.position.offset(1,size+1,1)
-//         await bot.pathfinder.goto(new GoalNear(pos.x, pos.y, pos.z, 1));
-//         for(let j=2; j<size + 2; j++)
-//         {
-//             await equip(stone_name, 'hand')
-//             await place(bot.blockAt(startBlock.position.offset(i,size+1,j)),new Vec3(0,1,0),stone_name)
-//         }
-//     }
-// }
-// pos = startBlock.position.offset(1,size+1,1)
-// await bot.pathfinder.goto(new GoalNear(pos.x, pos.y, pos.z, 1));
 
 
 bot.once('spawn', () => {
