@@ -9,7 +9,7 @@ const { Vec3 } = require('vec3')
 
 const bot = mineflayer.createBot({
     host: 'localhost', // minecraft 服务器的 ip地址
-    port: 56393,        
+    port: 64348,        
     username: 'builder',  
     version:"1.19"
     // 默认使用25565，如果你的服务器端口不是这个请取消注释并填写。
@@ -101,6 +101,7 @@ async function placeItem(bot, name, position) {
     ];
     let referenceBlock = null;
     let faceVector = null;
+    let _placeItemFailCount = 0;
     for (const vector of faceVectors) {
         const block = bot.blockAt(position.minus(vector));
         if (block?.name !== "air") {
@@ -151,35 +152,6 @@ async function placeItem(bot, name, position) {
     }
 }
 
-
-// async function layFoundation(bot) {
-//     const foundationSize = 5;
-//     const foundationBlock = "cobblestone";
-   
-//     // console.log('mcdata', mcData);
-    
-//     console.log('item:',bot.inventory.findInventoryItem(mcData?.itemsByName[foundationBlock].id));
-    
-//     const item = bot.inventory.findInventoryItem(mcData?.itemsByName[foundationBlock].id);
-    
-//     if (!item || item.count < foundationSize * foundationSize) {
-//       bot.chat(`I don't have enough ${foundationBlock}, I will mine some.`);
-//       await mineBlock(bot, foundationBlock, foundationSize * foundationSize - (item ? item.count : 0));
-//     }
-//     for (let x = 0; x < foundationSize; x++) {
-//       for (let z = 0; z < foundationSize; z++) {
-//         const targetPosition = position.offset(x, 1, z);
-//         const block = bot.blockAt(targetPosition);
-//         if (!block || block.name !== foundationBlock) {
-//           await placeItem(bot, foundationBlock, targetPosition);
-//         }
-//       }
-//     }
-//     bot.chat("Foundation has been laid.");
-//   }
-
-
-
   async function layFoundation(bot, startPosition) {
     const foundationSize = 5;
     const foundationBlock = "cobblestone";
@@ -189,11 +161,11 @@ async function placeItem(bot, name, position) {
     if (!item || item.count < foundationSize * foundationSize) {
       bot.chat(`I don't have enough ${foundationBlock}, I will mine some.`);
       let need = foundationSize * foundationSize - (item ? item.count : 0);
-      bot.chatTo(bot.username, `I don't have enough ${foundationBlock}, I need ${need} ${foundationBlock}`)
+      chatTo(bot, bot.username, `I don't have enough ${foundationBlock}, I need ${need} ${foundationBlock}`)
     //   await mineBlock(bot, foundationBlock, foundationSize * foundationSize - (item ? item.count : 0));
         
     return 
-}
+  }
 
     // Lay the foundation
     for (let x = 0; x < 5; x++) {
@@ -208,31 +180,73 @@ async function placeItem(bot, name, position) {
 
     const size = 5;
     const wallBlock = "oak_planks";
-    const item = bot.inventory.findInventoryItem(mcData?.itemsByName[foundationBlock].id);
-
-    if (!item || item.count < foundationSize * foundationSize) {
-        bot.chat(`I don't have enough ${foundationBlock}, I will mine some.`);
-        let need = foundationSize * foundationSize - (item ? item.count : 0);
-        bot.chat(`I need ${need} ${foundationBlock}`);
-        await mineBlock(bot, foundationBlock, foundationSize * foundationSize - (item ? item.count : 0));
+    const item = bot.inventory.findInventoryItem(mcData?.itemsByName[wallBlock].id);
+    let total = (size - 2)*(size*2 + (size-2)*2)
+    if (!item || item.count < total) {
+        bot.chat(`I don't have enough ${wallBlock}`);
+        let need = total - (item ? item.count : 0);
+        chatTo(bot,bot.username, `I don't have enough ${wallBlock}, I need ${need} ${wallBlock}`)
+        return
       }
+
     // Build the walls
-    for (let x = 0; x < 5; x++) {
-        for (let y = 1; y < 4; y++) {
+    for (let x = 0; x < size; x++) {
+        for (let y = 1; y < size - 1; y++) {
           const position = startPosition.offset(x, y, 0);
           await placeItem(bot, "oak_planks", position);
           const position2 = startPosition.offset(x, y, 4);
           await placeItem(bot, "oak_planks", position2);
         }
       }
-      for (let z = 0; z < 5; z++) {
-        for (let y = 1; y < 4; y++) {
+      for (let z = 0; z < size; z++) {
+        for (let y = 1; y < size - 1; y++) {
           const position = startPosition.offset(0, y, z);
           await placeItem(bot, "oak_planks", position);
           const position2 = startPosition.offset(4, y, z);
           await placeItem(bot, "oak_planks", position2);
         }
       }
+  }
+
+
+  async function buildRoof(bot, startPosition) {
+    const size = 5;
+    const roofBlock = "cobblestone";
+    
+    const item = bot.inventory.findInventoryItem(mcData?.itemsByName[roofBlock].id);
+    
+    if (!item || item.count < size * size + 4) {
+      bot.chat(`I don't have enough ${roofBlock}`);
+      let need = size * size + 4 - (item ? item.count : 0);
+      chatTo(bot, bot.username, `I don't have enough ${roofBlock}, I need ${need} ${roofBlock}`)
+    //   await mineBlock(bot, foundationBlock, foundationSize * foundationSize - (item ? item.count : 0));
+    return 
+  }
+
+    for (let x = 0; x < size; x++) {
+      for (let z = 0; z < size; z++) {
+        const position = startPosition.offset(x, size - 1, z);
+        await placeItem(bot, roofBlock, position);
+      }
+    }
+    await placeItem(bot, roofBlock, startPosition.offset(0, size, 0));
+    await placeItem(bot, roofBlock, startPosition.offset(size-1, size, 0));
+    await placeItem(bot, roofBlock, startPosition.offset(0, size, size-1));
+    await placeItem(bot, roofBlock, startPosition.offset(size-1, size, size-1));  
+  }
+
+  async function placeDoor(bot, startPosition) {
+    door = bot.inventory.items().find(item => item.name.endsWith('door'));
+    console.log('door:',door);
+    if (!door) {
+      chatTo(bot, bot.username, "I don't have any doors to place.");
+      return;
+    }
+     
+    // mine the block in front of the door
+    const position = startPosition.offset(2, 1, 0);
+   
+    await placeItem(bot,door.name, position)
   }
 
   async function buildStructure(bot) {
@@ -286,32 +300,21 @@ async function placeItem(bot, name, position) {
     bot.chat("Finished building the structure.");
   }
    
-
-  bot.once('spawn', () => {
-    // console.log('id ',mcData);
-    // console.log('bot position',bot.entity.position);
-    // // const door = new Block(registry.blocksByName[acacia_door])
-    // blockName = 'acacia_door'
-    // // const blockType = bot.mcData.blocksByName[blockName].id;
-    // const doorBlock = registry.blocksByName[blockName].id
-    // console.log('blockId: ',registry.blocksByName[blockName]);
-    
-    // console.log(`方块 "${blockName}" 的数字ID为: ${doorBlock}`);
-
-    // const checkBlock = bot.blockAt(bot.entity.position.offset(-1,0,-1)); 
-    // const door = 'acacia_door'
-    // const wood = 'acacia_planks'
-    // // 将木头方块放置到创造模式的槽位中
+async function BuildAHouse(bot, startPosition) {
    
-    // if(checkSpace(checkBlock))
-    // {
-    //     const woodenBlock = 27; // 获取木头方块的ID/
-    //     const roof = 'stone'
-    //     BuildAHouse(door,wood,roof,checkBlock).then(()=>{console.log('build house done')})        
-    //         // BuildARoof('stone',checkBlock)}
-    // // })
-    // }
-     buildStructure(bot)
+  await layFoundation(bot, startPosition);
+  await buildWalls(bot, startPosition);
+  await placeDoor(bot, startPosition);
+  await buildRoof(bot, startPosition);
+
+  
+}
+  bot.once('spawn', () => {
+   
+    startPosition = bot.entity.position.floored();
+    console.log('startPosition:',startPosition);
+    
+    BuildAHouse(bot, startPosition);
 
 
 })
